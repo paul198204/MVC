@@ -1,0 +1,12 @@
+﻿@*@model MvcApplication2.ViewModels.CourseStudent*@
+@model IEnumerable<MvcApplication2.Models.Student>
+@{
+    ViewBag.Title = "Abc Page";
+}
+
+<h2>this is abc page</h2>
+@*<h2>Course Title : @Model.course.CourseName</h2>*@
+@foreach (var item in Model)
+{
+    <h2>Student Name: @item.FirstName @item.LastName</h2>
+}
