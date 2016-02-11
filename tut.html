@@ -1,0 +1,134 @@
+<html>
+<head>
+	<title> D3 tutorial </title>
+	<script src="http://d3js.org/d3.v3.min.js"></script>
+</head>
+
+<body>
+
+<script>
+		var scaleShift = 30;
+        var padding = 0.2;
+        var axisTickCount = 10;
+		var chartWidth = 1150;
+		var chartHeight = 300;
+		//var chartsDivId = "#cichart";
+		var data = [{date: new Date(2011, 1, 1), value: 100},
+			{date: new Date(2011, 2, 1), value: 99},
+			{date: new Date(2011, 3, 1), value: 98},
+			{date: new Date(2011, 4, 1), value: 97}
+		];
+        var margin = { top: 50, right: 100, bottom: 50, left: 50 },
+            width = this.chartWidth - margin.left - margin.right,
+            height = this.chartHeight - margin.top - margin.bottom;
+
+        var svg = d3.select("body").append("svg")
+            .attr("width", width + margin.left + margin.right)
+            .attr("height", height + margin.top + margin.bottom)
+            .append("g")
+            .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+        
+        // X and Y Axis for Percentage
+        var x = d3.time.scale()
+            .domain(d3.extent(data, d => new Date(d[0])))
+            .range([scaleShift, width - scaleShift]);
+
+        var xAxis = d3.svg.axis()
+            .scale(x)
+            .tickSize(0, 0)
+            .orient("bottom");
+
+        svg.append("g")
+            .attr("class", "x axis")
+            .attr("transform", "translate(0," + height + ")")
+            .call(xAxis);
+
+        var xScale = d3.scale.ordinal()
+            .rangeRoundBands([0, width], padding)
+            .domain(data.map(d => new Date(d[0]).toLocaleString()));
+
+        var y = d3.scale.linear()
+            .range([height, 0])
+            .domain([0, 100]);
+
+        var yAxis = d3.svg.axis()
+            .scale(y)
+            .orient("left")
+            .ticks(axisTickCount)
+            .tickFormat(d3.format("s"));
+
+        svg.selectAll("line.horizontalGrid").data(y.ticks(axisTickCount)).enter()
+            .append("line")
+            .attr({
+            "class": "horizontalGrid",
+            "x1": margin.right,
+            "x2": width,
+            "y1": d => y(d),
+            "y2": d => y(d)
+        });
+
+        svg.append("g")
+            .attr("class", "y axis")
+            .call(yAxis)
+            .append("text")
+            .attr("transform", "rotate(-90)")
+            .attr("dy", ".90em")
+            .style("text-anchor", "end")
+            .text("Percentage");
+
+        // Y axis for Sessions
+        var yRight = d3.scale.linear()
+            .range([height, 0])
+            .domain([0, d3.max(data, d => d[2])]);
+
+        var yAxisRight = d3.svg.axis()
+            .scale(yRight)
+            .orient("right")
+            .ticks(axisTickCount)
+            .tickFormat(d3.format("s"));
+
+        svg.append("g")
+            .attr("class", "y axis")
+            .attr("transform", "translate(" + (width + this.getShift()) + " ,0)")
+            .style("fill", "black")
+            .call(yAxisRight)
+            .append("text")
+            .attr("transform", "rotate(-90)")
+            .attr("text-anchor", "end")
+            .attr("dy", "4em")
+            .text("Sessions");
+
+        // Bar Chart for Percentage
+        var bars = svg.selectAll(".bar")
+            .data(data)
+            .enter()
+            .append("g")
+            .attr("class", "bar");
+
+        var tooltip = d3.select("#tooltip");
+        
+		//bars.append("rect")
+        //    .attr("x", d => x(new Date(d[0])))
+        //    .attr("y", d => y(this.getValueForChartType(d[1])))
+         //   .attr("width", xScale.rangeBand())
+        //    .attr("height", d => height - y(this.getValueForChartType(d[1])))
+        //    .attr("fill", d => this.getColorForValue(d[1]))
+        //    .on("mouseover", d => {
+         //   var html = "Sessions:&nbsp; " + this.getValueForChartType(d[1]).toLocaleString() + "% <br/> DateTime:&nbsp;" + new Date(d[0]).toLocaleString() + "<br/> Total Sessions:&nbsp;" + d[2];
+        //    UiCustomerImpactViewModel.showToolTip(tooltip, html);
+        //})
+        //    .on("mouseout", () => { UiCustomerImpactViewModel.hideToolTip(tooltip); });
+		
+        // Line for Sessions
+        var line = d3.svg.line()
+            .x(d => x(new Date(d[0])))
+            .y(d => yRight(d[2]));
+
+        //svg.append("path")
+        //    .datum(data)
+        //    .attr("class", "line")
+        //    .style("stroke", "darkblue")
+        //    .attr("d", line);
+</script>
+</body>
+</html>
