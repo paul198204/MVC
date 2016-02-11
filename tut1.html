@@ -1,0 +1,56 @@
+<!doctype html>
+<html>
+<head>
+	<title> D3 tutorial </title>
+	<script src="http://d3js.org/d3.v3.min.js"></script>
+</head>
+
+<body>
+<p> this is paragraph </p>
+<script>
+		var scaleShift = 30;
+        var padding = 0.2;
+        var axisTickCount = 10;
+		var chartWidth = 1150;
+		var chartHeight = 300;
+		//var chartsDivId = "#cichart";
+		var data = [{date: new Date(2011, 1, 1), value: 100},
+			{date: new Date(2011, 2, 1), value: 99},
+			{date: new Date(2011, 3, 1), value: 98},
+			{date: new Date(2011, 4, 1), value: 97}
+		];
+		
+		var data1 = [1,2,3,4];
+        var margin = { top: 50, right: 100, bottom: 50, left: 50 },
+            width = this.chartWidth - margin.left - margin.right,
+            height = this.chartHeight - margin.top - margin.bottom;
+
+        var svg = d3.select("body").append("svg")
+            .attr("width", width + margin.left + margin.right)
+            .attr("height", height + margin.top + margin.bottom)
+            .append("g")
+            .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+			
+			// X and Y Axis for Percentage
+        var x = d3.time.scale()
+            .domain(d3.extent(data1))
+            .range([scaleShift, width - scaleShift]);
+
+        var xAxis = d3.svg.axis()
+            .scale(x);
+            
+
+        svg.append("g")
+            .attr("class", "x axis")
+            .attr("transform", "translate(0,20)")
+            .call(xAxis);
+			
+		var circle = svg.append("circle")
+					.attr("cx",250)
+					.attr("cy",250)
+					.attr("r",50)
+					.attr("fill", "red");
+					
+</script>
+</body>
+</html>
